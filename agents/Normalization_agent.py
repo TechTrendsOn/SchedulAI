@@ -1,21 +1,8 @@
-# Normalization Agent
+# agents/Normalization_agent.py
 import pandas as pd
-import numpy as np
-
-
-# Initialize context as a shared dictionary
-context = {}
-
-# Put your ingested data into context
-context["basic_params"] = basic_params
-context["service_periods"] = service_periods
-context["compliance_notes"] = compliance_notes
-context["employees_df"] = employees_df
-context["store_configs"] = store_configs
-context["staff_estimate"] = staff_estimate
 
 class NormalizationAgent:
-    def run(self, context):
+    def run(self, context: dict) -> dict:
         employees_df = context["employees_df"]
         basic_params = context["basic_params"]
 
@@ -80,7 +67,7 @@ class NormalizationAgent:
         MIN_REST_HOURS  = float(get_param("Minimum Hours Between Shifts") or 10)
         MAX_CONSEC_DAYS = int(get_param("Maximum Consecutive Working Days") or 6)
 
-        # --- Step 5: Update context ---
+        # Step 5: Update context
         context.update({
             "availability_tidy": availability_tidy,
             "MIN_SHIFT_HOURS": MIN_SHIFT_HOURS,
@@ -88,4 +75,3 @@ class NormalizationAgent:
             "MAX_CONSEC_DAYS": MAX_CONSEC_DAYS
         })
         return context
-
