@@ -112,9 +112,3 @@ class ConstraintSolverAgent:
         context["draft_roster_df"] = roster_df
         return context
 
-# Run constraint solver
-solver_agent = ConstraintSolverAgent()
-context = solver_agent.run(context)
-
-print("Draft roster preview:")
-display(context["draft_roster_df"].head())
