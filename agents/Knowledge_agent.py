@@ -1,4 +1,5 @@
-# Knowledge Agent (RAG)
+# agents/Knowledge_agent.py
+import pandas as pd
 import chromadb
 from chromadb.config import Settings
 
@@ -7,13 +8,13 @@ class KnowledgeAgent:
         self.client = chromadb.Client(Settings(anonymized_telemetry=False))
         self.collection = self.client.get_or_create_collection(name="compliance_store_knowledge")
 
-    def df_to_text(self, df, title):
-        # Convert dataframe into a text block
+    def df_to_text(self, df, title: str) -> str:
+        """Convert a dataframe into a text block for RAG storage."""
         return f"{title}\n" + "\n".join([
             " | ".join(map(str, row)) for _, row in df.fillna("").iterrows()
         ])
 
-    def run(self, context):
+    def run(self, context: dict) -> dict:
         docs, ids, metas = [], [], []
 
         # Collect all structured sheets from context
@@ -39,7 +40,7 @@ class KnowledgeAgent:
             self.collection.add(documents=docs, metadatas=metas, ids=ids)
 
         # Expose query function
-        def rag_query(q, n_results=3):
+        def rag_query(q: str, n_results: int = 3):
             res = self.collection.query(query_texts=[q], n_results=n_results)
             return list(zip(res["documents"][0], res["metadatas"][0]))
 
