@@ -89,14 +89,3 @@ class NormalizationAgent:
         })
         return context
 
-# Run normalization agent
-norm_agent = NormalizationAgent()
-context = norm_agent.run(context)
-
-# Preview
-display(context["availability_tidy"].head())
-print("Params:", {
-    "MIN_SHIFT_HOURS": context["MIN_SHIFT_HOURS"],
-    "MIN_REST_HOURS": context["MIN_REST_HOURS"],
-    "MAX_CONSEC_DAYS": context["MAX_CONSEC_DAYS"]
-})
