@@ -83,11 +83,3 @@ class ComplianceAgent:
         context["compliance_passed"] = len(violations) == 0
 
         return context
-
-# Run compliance agent
-compliance_agent = ComplianceAgent()
-context = compliance_agent.run(context)
-
-print("Compliance check results:")
-display(context["compliance_violations"])
-print("Compliance passed:", context["compliance_passed"])
