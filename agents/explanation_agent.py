@@ -1,4 +1,4 @@
-# Explanation Agent (Manager-friendly, RAG-grounded)
+# Explanation_agent (Manager-friendly, RAG-grounded)
 import pandas as pd
 
 class ExplanationAgent:
@@ -130,3 +130,4 @@ class ExplanationAgent:
         explanations_df = pd.DataFrame(explanations)
         context["explanations_df"] = explanations_df
         return context
+
