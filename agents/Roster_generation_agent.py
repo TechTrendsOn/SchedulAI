@@ -22,20 +22,3 @@ class RosterGenerationAgent:
         context["final_roster_df"] = final_roster
         return context
 
-# Run roster generation agent
-roster_gen_agent = RosterGenerationAgent()
-context = roster_gen_agent.run(context)
-
-print("Final roster (ready for explanation):")
-display(context["final_roster_df"].head())
-
-# Pivot view: Employee Schedule Grid
-pivot = context["final_roster_df"].pivot_table(
-    index="day_label",
-    columns="employee_name",
-    values="shift_code",
-    aggfunc=lambda x: ";".join(str(v) for v in x if pd.notnull(v))
-)
-
-print("Employee Schedule Grid (2-week overview):")
-display(pivot)
