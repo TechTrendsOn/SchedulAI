@@ -45,10 +45,3 @@ class KnowledgeAgent:
 
         context["rag_query_fn"] = rag_query
         return context
-
-# Run knowledge agent
-knowledge_agent = KnowledgeAgent()
-context = knowledge_agent.run(context)
-
-# Example query
-print(context["rag_query_fn"]("minimum rest period"))
