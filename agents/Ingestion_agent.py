@@ -2,6 +2,11 @@
 import pandas as pd
 
 def clean_table(df, min_cols=2):
+    """
+    Cleans a dataframe by:
+    - Dropping rows that are mostly NaN or too short
+    - Resetting headers if the first row looks like column names
+    """
     df = df.dropna(how="all")
     df = df[df.count(axis=1) >= min_cols]
     df = df.reset_index(drop=True)
@@ -20,20 +25,24 @@ class IngestionAgent:
         # Load availability
         availability_xls = pd.ExcelFile("data/employee_availability_2weeks.xlsx")
         employees_df = clean_table(pd.read_excel(availability_xls, sheet_name=availability_xls.sheet_names[0]))
-        context["availability_tidy"] = employees_df
+        context["employees_df"] = employees_df
+        context["availability_sheets"] = {
+            sheet: clean_table(pd.read_excel(availability_xls, sheet_name=sheet))
+            for sheet in availability_xls.sheet_names
+        }
 
-        # Load fixed hours
+        # Load fixed hours template
         fixed_hours_xls = pd.ExcelFile("data/fixed_hours_template_2columns.xlsx")
         fixed_hours_sheets = {sheet: clean_table(pd.read_excel(fixed_hours_xls, sheet_name=sheet)) 
                               for sheet in fixed_hours_xls.sheet_names}
         context["fixed_hours"] = fixed_hours_sheets.get("Fixed Hours Template - Table 1")
 
-        # Load management roster
+        # Load management roster codes
         mgmt_xls = pd.ExcelFile("data/management_roster_simplified.xlsx")
         mgmt_sheets = {sheet: clean_table(pd.read_excel(mgmt_xls, sheet_name=sheet)) 
                        for sheet in mgmt_xls.sheet_names}
         context["shift_codes"] = mgmt_sheets.get("Shift Codes")
-        context["management_roster"] = mgmt_sheets.get("Monthly Roster")
+        context["mgmt_roster"] = mgmt_sheets.get("Monthly Roster")
 
         # Load store configs
         store_xls = pd.ExcelFile("data/store_configurations.xlsx")
