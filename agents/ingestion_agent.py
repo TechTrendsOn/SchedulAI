@@ -1,4 +1,4 @@
-# agents/Ingestion_agent.py
+# Ingestion_agent.py
 import pandas as pd
 
 def clean_table(df, min_cols=2):
@@ -54,3 +54,4 @@ class IngestionAgent:
         context["staff_estimate"] = pd.read_csv("data/store_structure_staff_estimate.csv")
 
         return context
+
