@@ -1,4 +1,4 @@
-# agents/Knowledge_agent.py
+# Knowledge_agent.py
 import pandas as pd
 import chromadb
 from chromadb.config import Settings
@@ -46,3 +46,4 @@ class KnowledgeAgent:
 
         context["rag_query_fn"] = rag_query
         return context
+
