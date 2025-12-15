@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from transformers import pipeline
-from io import BytesIO
+# from transformers import pipeline
+# from io import BytesIO
 
 # Import agents
 from agents.Ingestion_agent import IngestionAgent
@@ -10,7 +10,7 @@ from agents.Constraint_solver_agent import ConstraintSolverAgent
 from agents.Compliance_agent import ComplianceAgent
 from agents.Roster_generation_agent import RosterGenerationAgent
 from agents.Knowledge_agent import KnowledgeAgent
-from agents.Explanation_agent import ExplanationAgent
+#from agents.Explanation_agent import ExplanationAgent
 
 # Helper: download DataFrame
 def df_download_button(df, label, filename):
@@ -117,6 +117,7 @@ if st.button("Run knowledge agent"):
             st.text(doc[:300] + "...")
 
 # Agent 7: Explanation
+"""
 st.markdown('<div class="agent-title">🟣 Agent 7: Explanation</div>', unsafe_allow_html=True)
 
 @st.cache_resource
@@ -146,3 +147,4 @@ if st.button("Generate explanations"):
         ]
         st.dataframe(filtered, use_container_width=True, height=400)
         df_download_button(filtered, "Filtered explanations", "filtered_explanations.csv")
+"""
