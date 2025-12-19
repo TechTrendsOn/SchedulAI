@@ -49,9 +49,9 @@ page = st.sidebar.radio("Select Agent/Page", [
     "9. Explanation Agent Chat"
 ])
 
-# -----------------------------------------------------------------------------
+
 # 1. Ingestion
-# -----------------------------------------------------------------------------
+# ------------
 if page.startswith("1"):
     st.header("Ingestion Agent")
     st.write("Upload Excel/CSV files into data/inputs and run ingestion. Artifacts and audit JSONs are saved in data/artifacts.")
@@ -81,9 +81,9 @@ if page.startswith("1"):
             with open(path, "rb") as f:
                 st.download_button(f"Download {os.path.basename(path)}", f.read(), file_name=os.path.basename(path))
 
-# -----------------------------------------------------------------------------
+
 # 2. Preprocessor
-# -----------------------------------------------------------------------------
+# ---------------
 elif page.startswith("2"):
     st.header("Preprocessor Agent")
     st.write("Normalize availability, shift codes, and fixed hours. Produces an audit manifest.")
@@ -108,9 +108,9 @@ elif page.startswith("2"):
                 with open(path, "rb") as f:
                     st.download_button(f"Download {os.path.basename(path)}", f.read(), file_name=os.path.basename(path))
 
-# -----------------------------------------------------------------------------
+
 # 3. Parameters
-# -----------------------------------------------------------------------------
+# -------------
 elif page.startswith("3"):
     st.header("Parameters Agent")
     st.write("Extract rostering parameters (meal breaks, penalty rates, compliance notes).")
@@ -147,9 +147,9 @@ elif page.startswith("3"):
                         if isinstance(tbl, pd.DataFrame):
                             st.write(f"Sheet: {sname}, rows={len(tbl)}, cols={list(tbl.columns)[:6]}")
 
-# -----------------------------------------------------------------------------
+
 # 4. Normalization
-# -----------------------------------------------------------------------------
+# ----------------
 elif page.startswith("4"):
     st.header("Normalization Agent")
     st.write("Normalize availability tokens for consistency.")
@@ -173,9 +173,9 @@ elif page.startswith("4"):
             with open(norm_path, "rb") as f:
                 st.download_button("Download availability_normalized.csv", f.read(), file_name="availability_normalized.csv")
 
-# -----------------------------------------------------------------------------
+
 # 5. Solver
-# -----------------------------------------------------------------------------
+# ---------
 elif page.startswith("5"):
     st.header("Solver Agent")
     st.write("Generate draft roster using CP-SAT solver.")
@@ -198,9 +198,9 @@ elif page.startswith("5"):
             with open(roster_path, "rb") as f:
                 st.download_button("Download roster_solution.csv", f.read(), file_name="roster_solution.csv")
 
-# -----------------------------------------------------------------------------
+
 # 6. Compliance
-# -----------------------------------------------------------------------------
+# -------------
 elif page.startswith("6"):
     st.header("Compliance Agent")
     st.write("Run compliance checks and produce a structured report.")
@@ -293,9 +293,9 @@ elif page.startswith("6"):
         st.subheader("Raw compliance_report.json")
         st.code(json.dumps(report, indent=2))
 
-# -----------------------------
+
 # 6b. Compliance & Swaps (interactive confirmation)
-# -----------------------------
+# -------------------------------------------------
 elif page.startswith("6b"):
     st.header("Compliance & Swaps — Interactive Confirmation")
     raw_compliance_path = f"{DATA_OUT}/compliance_report.json"
@@ -338,13 +338,30 @@ elif page.startswith("6b"):
                     confirm = st.checkbox(label, key=f"confirm_{idx}")
                     item["confirmed"] = bool(confirm)
 
+            
+            # Save confirmed compliance report
+            # --------------------------------
             if st.button("Save confirmed compliance report"):
                 import datetime
                 ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
                 confirmed_path = os.path.join(DATA_OUT, f"compliance_report_confirmed_{ts}.json")
 
+                confirmed_violations = []
+                confirmed_swaps = []
+
+                for item in actionable_items:
+                    if item["confirmed"]:
+                        confirmed_violations.append(item["violation"])
+                        if item["swap"]:
+                            confirmed_swaps.append(item["swap"])
+
+                final_json = {
+                    "violations": confirmed_violations,
+                    "swaps": confirmed_swaps
+                }
+
                 with open(confirmed_path, "w") as f:
-                    json.dump({"confirmed_items": actionable_items}, f, indent=2)
+                    json.dump(final_json, f, indent=2)
 
                 st.success(f"Saved: {confirmed_path}")
 
@@ -356,9 +373,9 @@ elif page.startswith("6b"):
 
 
 
-# -----------------------------------------------------------------------------
+
 # 7. Final Roster
-# -----------------------------------------------------------------------------
+# ---------------
 elif page.startswith("7"):
     st.header("Final Roster Agent")
     st.write("Merge confirmed compliance fixes and swaps, then produce final roster and manifest.")
@@ -406,9 +423,9 @@ elif page.startswith("7"):
             with open(path, "rb") as f:
                 st.download_button(f"Download {os.path.basename(path)}", f.read(), file_name=os.path.basename(path))
 
-# -----------------------------------------------------------------------------
+
 # 8. Knowledge Agent Chat
-# -----------------------------------------------------------------------------
+# -----------------------
 elif page.startswith("8"):
     st.header("Knowledge Agent Chat")
     st.write("Ask grounded compliance questions from the ingested knowledge base.")
@@ -450,9 +467,9 @@ elif page.startswith("8"):
             st.subheader("Answer")
             st.json(res)
 
-# -----------------------------------------------------------------------------
+
 # 9. Explanation Agent Chat
-# -----------------------------------------------------------------------------
+# -------------------------
 elif page.startswith("9"):
     st.header("Explanation Agent Chat")
     st.write("Generate a narrative, auditor-friendly explanation based on compliance report and final roster manifest.")
