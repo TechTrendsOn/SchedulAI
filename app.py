@@ -5,11 +5,6 @@ import glob
 import pandas as pd
 import altair as alt
 import streamlit as st
-from dotenv import load_dotenv
-
-# Load Hugging Face token from .env
-load_dotenv()
-hf_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 # Import agents (assumes your repo structure matches earlier messages)
 from agents.ingestion_agent import ingest_directory, print_ingested_summary, completeness_report, save_ingestion_artifacts
