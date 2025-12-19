@@ -18,6 +18,10 @@ from agents.final_roster_agent import FinalRosterAgent
 from agents.knowledge_agent import KnowledgeAgentRAG
 from agents.explanation_agent import ExplanationAgent
 
+input_dir = st.text_input("Input directory", value="data/inputs")
+if st.button("Run Ingestion"):
+    ingest_directory(input_dir)
+
 # Helpers
 def get_latest_confirmed_report(pattern: str):
     files = glob.glob(pattern)
