@@ -2,7 +2,6 @@ import json
 from langchain_core.prompts import PromptTemplate
 from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
-
 from agents.knowledge_agent import KnowledgeAgentRAG   # <-- your RAG agent
 
 
@@ -110,6 +109,7 @@ class ExplanationAgent:
     # ---------------------
     def human_report(self) -> str:
         return self.generate_explanation()["explanation_text"]
+
 
 
 
